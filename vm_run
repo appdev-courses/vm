@@ -9,23 +9,18 @@ vm_data_output=$(sudo docker ps -aqf name=$vm_data)
 vm_image_output=$(sudo docker images -q $vm_image)
 vm_container_output=$(sudo docker ps -aqf name=$vm_container)
 
-if [[ $1 == "reset" || -z $vm_data_output ]]
+if [[ "reset" || -z $vm_data_output ]]
 then
     if [[ $vm_data_output ]]
     then
         echo "Recreating data volume..."
-        read -p "This will delete all user VM data. Are you sure you want to proceed? [y/n] " -n 1 choice
-        echo
     else
         echo "Creating data volume..."
-        choice=y
     fi
     
-    if [[ $choice =~ ^[Yy]$ ]]
-    then
-        sudo docker rm $vm_data &> /dev/null
-        sudo docker create -v /home/$vm_user --name $vm_data busybox /bin/true &> /dev/null
-    fi
+    read -p "Enter a path (on your machine) to use as the home directory: " host_directory
+    sudo docker rm $vm_data &> /dev/null
+    sudo docker create -v $host_directory:/home/$vm_user --name $vm_data busybox /bin/true &> /dev/null
 fi
 
 if [[ $1 =~ ^reset|rebuild$ || -z $vm_image_output || -z $vm_container_output ]]
