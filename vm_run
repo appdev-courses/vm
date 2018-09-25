@@ -33,7 +33,6 @@ then
     fi
     
     sudo docker rm $vm_container &> /dev/null
-    sudo docker rmi $vm_image &> /dev/null
     sudo docker build . -t $vm_image
     sudo docker run -it --volumes-from $vm_data --name $vm_container $vm_image /tmp/vm_init
 else
