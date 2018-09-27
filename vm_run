@@ -9,7 +9,7 @@ vm_data_output=$(sudo docker ps -aqf name=$vm_data)
 vm_image_output=$(sudo docker images -q $vm_image)
 vm_container_output=$(sudo docker ps -aqf name=$vm_container)
 
-if [[ "reset" || -z $vm_data_output ]]
+if [[ $1 == "reset" || -z $vm_data_output ]]
 then
     if [[ $vm_data_output ]]
     then
@@ -19,11 +19,13 @@ then
     fi
     
     read -p "Enter a path (on your machine) to use as the home directory: " host_directory
+    host_directory=$(cd ${host_directory/#\~/$HOME} && pwd)
+    echo "Mounting directory" $host_directory "as" /home/$vm_user
     sudo docker rm $vm_data &> /dev/null
-    sudo docker create -v $host_directory:/home/$vm_user --name $vm_data busybox /bin/true &> /dev/null
+    sudo docker create -v $host_directory:/home/$vm_user --name $vm_data busybox /bin/true 
 fi
 
-if [[ $1 =~ ^reset|rebuild$ || -z $vm_image_output || -z $vm_container_output ]]
+if [[ $1 == "rebuild" || -z $vm_image_output || -z $vm_container_output ]]
 then
     if [[ -z $vm_image_output ]]
     then
@@ -32,12 +34,11 @@ then
         echo "Recreating dev VM..."
     fi
     
-    sudo docker rm $vm_container &> /dev/null
     sudo docker rmi $vm_image &> /dev/null
     sudo docker build . -t $vm_image
-    sudo docker run -it --volumes-from $vm_data --name $vm_container $vm_image /tmp/vm_init
 else
-    echo "Attaching to existing VM..."
-    sudo docker start $vm_container &> /dev/null
-    sudo docker attach $vm_container
+    echo "Running existing VM..."
 fi
+
+sudo docker rm $vm_container &> /dev/null
+sudo docker run -it --volumes-from $vm_data --name $vm_container $vm_image /tmp/vm_init
