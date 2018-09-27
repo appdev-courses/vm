@@ -20,25 +20,24 @@ then
     
     read -p "Enter a path (on your machine) to use as the home directory: " host_directory
     host_directory=$(cd ${host_directory/#\~/$HOME} && pwd)
-    echo "Mounting directory" $host_directory "as" /home/$vm_user
+    echo "Mounting directory $host_directory as /home/$vm_user..."
+
     sudo docker rm $vm_data &> /dev/null
-    sudo docker create -v $host_directory:/home/$vm_user --name $vm_data busybox /bin/true 
+    sudo docker create -v $host_directory:/home/$vm_user --name $vm_data busybox /bin/true &> /dev/null
 fi
 
-if [[ $1 == "rebuild" || -z $vm_image_output || -z $vm_container_output ]]
+if [[ $1 == "rebuild" || -z $vm_image_output ]]
 then
     if [[ -z $vm_image_output ]]
     then
-        echo "Creating dev VM..."
+        echo "Building VM image..."
     else
-        echo "Recreating dev VM..."
+        echo "Rebuilding VM image..."
     fi
     
     sudo docker rmi $vm_image &> /dev/null
-    sudo docker build . -t $vm_image
-else
-    echo "Running existing VM..."
+    sudo docker build . -t $vm_image &> /dev/null
 fi
 
-sudo docker rm $vm_container &> /dev/null
-sudo docker run -it --volumes-from $vm_data --name $vm_container $vm_image /tmp/vm_init
+echo "Running VM..."
+sudo docker run -it --rm --volumes-from $vm_data --name $vm_container $vm_image /tmp/vm_init
