@@ -40,4 +40,4 @@ then
 fi
 
 echo "Running VM..."
-sudo docker run -it --rm --volumes-from $vm_data --name $vm_container $vm_image /tmp/vm_init
+sudo docker run -it -p 5000:5000 --rm --volumes-from $vm_data --name $vm_container $vm_image /tmp/vm_init

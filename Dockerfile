@@ -7,3 +7,5 @@ RUN usermod -aG sudo vm-user
 RUN echo "vm-user ALL=(ALL) NOPASSWD:ALL" | tee -a /etc/sudoers
 
 COPY vm_init /tmp/vm_init
+
+EXPOSE 5000
