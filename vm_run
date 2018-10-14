@@ -26,7 +26,7 @@ then
     sudo docker create -v $host_directory:/home/$vm_user --name $vm_data busybox /bin/true 
 fi
 
-if [[ $1 == "rebuild" || -z $vm_image_output ]]
+if [[ $1 == "rebuild" ]]
 then
     if [[ -z $vm_image_output ]]
     then
