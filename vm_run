@@ -1,7 +1,7 @@
 #! /bin/bash
 
 vm_data="vm-data"
-vm_image="seedelano/vm-image"
+vm_image="cornellappdev/vm"
 vm_container="vm-container"
 vm_user="vm-user"
 
