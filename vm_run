@@ -39,6 +39,18 @@ rebuild_image() {
     sudo docker build . -t $vm_image
 }
 
+pull_image() {
+    if [[ -z $vm_image_output ]]
+    then
+        echo "Fetching VM image..."
+    else
+        echo "Updating VM image..."
+    fi
+
+    sudo docker rmi $vm_image &> /dev/null
+    sudo docker pull $vm_image 
+}
+
 recreate_container() {
     if [[ -z $vm_container_output ]]
     then
@@ -60,7 +72,7 @@ attach_to_container() {
 if [[ $1 == "reset" ]]
 then
     recreate_data_volume
-    rebuild_image
+    pull_image
     recreate_container
 fi
 
