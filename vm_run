@@ -69,22 +69,15 @@ attach_to_container() {
     sudo docker exec -it $vm_container /tmp/vm_init
 }
 
-if [[ $1 == "reset" ]]
+if [[ $1 == "rebuild" ]]
+then
+    rebuild_image
+fi
+
+if [[ $1 == "reset" || -z $vm_data_output || -z $vm_container_output ]]
 then
     recreate_data_volume
     pull_image
-    recreate_container
-fi
-
-if [[ $1 == "rebuild" || -z $vm_image_output ]]
-then
-    rebuild_image
-    recreate_container
-fi
-
-if [[ $1 == "recreate" || -z $vm_data_output || -z $vm_container_output ]]
-then
-    recreate_data_volume
     recreate_container
 fi
 
