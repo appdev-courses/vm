@@ -47,7 +47,6 @@ pull_image() {
         echo "Updating VM image..."
     fi
 
-    sudo docker rmi $vm_image &> /dev/null
     sudo docker pull $vm_image 
 }
 
@@ -76,7 +75,7 @@ else
     if [[ $1 == "reset" || -z $vm_data_output || -z $vm_container_output ]]
     then
         recreate_data_volume
-        # pull_image
+        pull_image
         recreate_container
     fi
 
