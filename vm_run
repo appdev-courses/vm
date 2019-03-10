@@ -61,7 +61,7 @@ recreate_container() {
     
     sudo docker kill $vm_container &> /dev/null
     sudo docker rm $vm_container &> /dev/null
-    sudo docker run -d -p 5000:5000 --volumes-from $vm_data --name $vm_container $vm_image &> /dev/null
+    sudo docker run -d -it -p 5000:5000 --volumes-from $vm_data --name $vm_container $vm_image &> /dev/null
 }
 
 attach_to_container() {
