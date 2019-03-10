@@ -72,13 +72,13 @@ attach_to_container() {
 if [[ $1 == "rebuild" ]]
 then
     rebuild_image
-fi
+else
+    if [[ $1 == "reset" || -z $vm_data_output || -z $vm_container_output ]]
+    then
+        recreate_data_volume
+        # pull_image
+        recreate_container
+    fi
 
-if [[ $1 == "reset" || -z $vm_data_output || -z $vm_container_output ]]
-then
-    recreate_data_volume
-    pull_image
-    recreate_container
+    attach_to_container
 fi
-
-attach_to_container
