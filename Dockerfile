@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y sudo curl python3 python3-pip git
 RUN useradd -m -s /bin/bash vm-user
 RUN usermod -aG sudo vm-user
 RUN echo "vm-user ALL=(ALL) NOPASSWD:ALL" | tee -a /etc/sudoers
+RUN chown -R vm-user:vm-user /home/vm-user
 
 COPY vm_init /tmp/vm_init
 
